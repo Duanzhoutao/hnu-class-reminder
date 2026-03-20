@@ -1,0 +1,14 @@
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+.idea/
+captures/
+/.android-sdk/
+.trae/
+.vscode/
+gradle-8.7/
+gradle-8.7-bin.zip
+*.apk
+我的课程和校历/

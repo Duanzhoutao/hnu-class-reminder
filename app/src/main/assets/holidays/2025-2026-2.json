@@ -1,0 +1,17 @@
+[
+  {
+    "date": "2026-04-05",
+    "type": "HOLIDAY",
+    "title": "清明节"
+  },
+  {
+    "date": "2026-05-01",
+    "type": "HOLIDAY",
+    "title": "劳动节"
+  },
+  {
+    "date": "2026-06-19",
+    "type": "HOLIDAY",
+    "title": "端午节"
+  }
+]
