@@ -28,17 +28,9 @@ class NotificationHelper @Inject constructor(
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         ReminderTier.values().forEach { tier ->
             val channel = NotificationChannel(
-                channelId(tier),
-                when (tier) {
-                    ReminderTier.NORMAL -> "普通提醒"
-                    ReminderTier.STANDARD -> "标准提醒"
-                    ReminderTier.STRONG -> "强提醒"
-                },
-                when (tier) {
-                    ReminderTier.NORMAL -> NotificationManager.IMPORTANCE_DEFAULT
-                    ReminderTier.STANDARD -> NotificationManager.IMPORTANCE_HIGH
-                    ReminderTier.STRONG -> NotificationManager.IMPORTANCE_HIGH
-                },
+                channelId(tier, settings),
+                channelName(tier),
+                channelImportance(tier),
             ).apply {
                 description = "海大课程签到提醒"
                 enableVibration(settings.vibrationEnabled && tier != ReminderTier.NORMAL)
@@ -70,7 +62,7 @@ class NotificationHelper @Inject constructor(
         createChannels(settings)
         if (!canPostNotifications()) return false
 
-        val notification = NotificationCompat.Builder(context, channelId(tier))
+        val notification = NotificationCompat.Builder(context, channelId(tier, settings))
             .setSmallIcon(R.drawable.ic_app_icon)
             .setContentTitle(title)
             .setContentText(body)
@@ -107,5 +99,23 @@ class NotificationHelper @Inject constructor(
         }
     }
 
-    private fun channelId(tier: ReminderTier): String = "course_reminder_${tier.name.lowercase()}"
+    private fun channelName(tier: ReminderTier): String =
+        when (tier) {
+            ReminderTier.NORMAL -> "普通提醒"
+            ReminderTier.STANDARD -> "标准提醒"
+            ReminderTier.STRONG -> "强提醒"
+        }
+
+    private fun channelImportance(tier: ReminderTier): Int =
+        when (tier) {
+            ReminderTier.NORMAL -> NotificationManager.IMPORTANCE_DEFAULT
+            ReminderTier.STANDARD -> NotificationManager.IMPORTANCE_HIGH
+            ReminderTier.STRONG -> NotificationManager.IMPORTANCE_HIGH
+        }
+
+    private fun channelId(tier: ReminderTier, settings: AppSettings): String {
+        val vibration = if (settings.vibrationEnabled) "v1" else "v0"
+        val sound = if (settings.soundEnabled) "s1" else "s0"
+        return "course_reminder_${tier.name.lowercase()}_${vibration}_${sound}"
+    }
 }
